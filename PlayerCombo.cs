@@ -12,6 +12,13 @@ public class PlayerCombo : MonoBehaviour {
 
 	private bool startCombo;
 
+	private Hit currentHit, nextHit;
+
+	private float comboTimer;
+
+	private bool canHit = true;
+	private bool resetCombo;
+
 	private void Awake()
 	{
 		anim = GetComponent<Animator>();
@@ -31,6 +38,12 @@ public class PlayerCombo : MonoBehaviour {
 
 	void CheckInputs()
 	{
+
+		if((Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2")) && !canHit)
+		{
+			resetCombo = true;
+		}
+
 		for (int i = 0; i < combos.Length; i++)
 		{
 			if(combos[i].hits.Length > currentCombo.Count)
@@ -60,10 +73,11 @@ public class PlayerCombo : MonoBehaviour {
 							}
 						}
 
-						if (comboMatch)
+						if (comboMatch && canHit)
 						{
-							Debug.Log("Hit adicionado ao combo");
-							PlayHit(combos[i].hits[currentCombo.Count]);
+							Debug.Log("Hit adicionado ao combo");							
+							nextHit = combos[i].hits[currentCombo.Count];
+							canHit = false;
 							break;
 						}
 					}
@@ -73,17 +87,45 @@ public class PlayerCombo : MonoBehaviour {
 
 			
 		}
+
+		if (startCombo)
+		{
+			comboTimer += Time.deltaTime;
+			if(comboTimer >= currentHit.animationTime && !canHit)
+			{
+				PlayHit(nextHit);
+				if (resetCombo)
+				{
+					canHit = false;
+					CancelInvoke();
+					Invoke("ResetCombo", currentHit.animationTime);
+				}
+			}
+
+			if(comboTimer >= currentHit.resetTime)
+			{
+				ResetCombo();
+			}
+
+		}
 	}
 
 	void PlayHit(Hit hit)
 	{
+		comboTimer = 0;
 		anim.Play(hit.animation);
 		startCombo = true;
 		currentCombo.Add(hit.inputButton);
+		currentHit = hit;
+		canHit = true;
 	}
 
 	void ResetCombo()
 	{
 		startCombo = false;
+		comboTimer = 0;
+		currentCombo.Clear();
+		anim.Rebind();
+		canHit = true;
 	}
 }
