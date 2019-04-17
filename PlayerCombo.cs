@@ -6,6 +6,8 @@ public class PlayerCombo : MonoBehaviour {
 
 	public Combo[] combos;
 
+	public Attack attack;
+
 	public List<string> currentCombo;
 
 	private Animator anim;
@@ -18,6 +20,7 @@ public class PlayerCombo : MonoBehaviour {
 
 	private bool canHit = true;
 	private bool resetCombo;
+
 
 	private void Awake()
 	{
@@ -117,6 +120,7 @@ public class PlayerCombo : MonoBehaviour {
 		startCombo = true;
 		currentCombo.Add(hit.inputButton);
 		currentHit = hit;
+		attack.SetAttack(hit);
 		canHit = true;
 	}
 
