@@ -14,4 +14,13 @@ public class Attack : MonoBehaviour {
 		slowDown = hit.slowDown;
 		hitSound = hit.hitSound;
 	}
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		Damage enemy = other.GetComponent<Damage>();
+		if(enemy != null)
+		{
+			enemy.TakeDamage(damage);
+		}
+	}
 }
