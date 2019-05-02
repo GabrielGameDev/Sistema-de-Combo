@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour {
 
+	public AudioPlayer audioPlayer;
+
 	private int damage;
 	private bool slowDown;
 	private AudioClip hitSound;
@@ -21,6 +23,9 @@ public class Attack : MonoBehaviour {
 		if(enemy != null)
 		{
 			enemy.TakeDamage(damage);
+			audioPlayer.PlaySound(hitSound);
+			if (slowDown)
+				SlowDown.instance.SetSlowDown();
 		}
 	}
 }
