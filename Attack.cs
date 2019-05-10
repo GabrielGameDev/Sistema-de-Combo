@@ -26,6 +26,8 @@ public class Attack : MonoBehaviour {
 			audioPlayer.PlaySound(hitSound);
 			if (slowDown)
 				SlowDown.instance.SetSlowDown();
+
+			ComboManager.instance.SetCombo();
 		}
 	}
 }
