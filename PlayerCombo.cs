@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerCombo : MonoBehaviour {
 
@@ -9,6 +10,8 @@ public class PlayerCombo : MonoBehaviour {
 	public Attack attack;
 
 	public List<string> currentCombo;
+
+	public UnityEvent OnStartCombo, OnFinishCombo;
 
 	private Animator anim;
 
@@ -55,6 +58,7 @@ public class PlayerCombo : MonoBehaviour {
 				{
 					if (currentCombo.Count == 0)
 					{
+						OnStartCombo.Invoke();
 						Debug.Log("Primeiro hit foi adicionado");
 						PlayHit(combos[i].hits[currentCombo.Count]);
 						break;
@@ -126,6 +130,8 @@ public class PlayerCombo : MonoBehaviour {
 
 	void ResetCombo()
 	{
+		resetCombo = false;
+		OnFinishCombo.Invoke();
 		startCombo = false;
 		comboTimer = 0;
 		currentCombo.Clear();
